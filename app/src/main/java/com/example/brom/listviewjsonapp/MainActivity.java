@@ -4,6 +4,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-// Create a new class, Mountain, that can hold your JSON data
+// Create a new class, com.example.brom.listviewjsonapp.Mountain, that can hold your JSON data
 
 // Create a ListView as in "Assignment 1 - Toast and ListView"
 
@@ -30,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        new FetchData().execute();
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -45,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // Construct the URL for the Internet service
-                URL url = new URL("_ENTER_THE_URL_TO_THE_PHP_SERVICE_SERVING_JSON_HERE_");
+                URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
 
                 // Create the request to the PHP-service, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -96,11 +104,27 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
+            Log.d("tomten", "DataFetched:" + o);
             // This code executes after we have received our data. The String object o holds
             // the un-parsed JSON string or is null if we had an IOException during the fetch.
+            ListView myListView = (ListView) findViewById(R.id.my_listview);
+
+
+            if (o != null){
+                try {
+                    JSONObject json1 = new JSONObject(o);
+                    JSONArray a = json1.getJSONArray("DataFetched");
+
+
+
+                }catch  (JSONException e) {
+                    Log.e("brom", "E:" +e.getMessage());
+                }
+            }
 
             // Implement a parsing code that loops through the entire JSON and creates objects
-            // of our newly created Mountain class.
+            // of our newly created com.example.brom.listviewjsonapp.Mountain class.
+
         }
     }
 }
