@@ -14,8 +14,13 @@ public class Mountain {
         this.height = inHeight;
         this.imgUrl = inImgUrl;
     }
-    @Override public String toString() {
-       String message = name;
-                return message;
+    /*@Override public String toString() {
+       return name;
+    }*/
+    public String nameGet() {
+        return name;
+    }
+    public String messageGet() {
+        return name + "is located at: " + location  + "\n" + "and has a height of: " + height + "m";
     }
 }

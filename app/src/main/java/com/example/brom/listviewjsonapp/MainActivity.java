@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -112,10 +114,17 @@ public class MainActivity extends AppCompatActivity {
             // This code executes after we have received our data. The String object o holds
             // the un-parsed JSON string or is null if we had an IOException during the fetch.
             ListView listview = (ListView)findViewById(R.id.my_listview);
-            List<Mountain> mntList = new ArrayList<Mountain>();
-            Array [] mntListArr = new Array[mntList.size()];
-            mntListArr = mntList.toArray(mntListArr);
-            ArrayAdapter<Mountain> myadapter = new ArrayAdapter<Mountain>(MainActivity.this, R.layout.list_item_view, R.id.my_listitem, mntList);
+            final ArrayList<String> mntList = new ArrayList<String>();
+            final ArrayList<String> mntData = new ArrayList<String>();
+
+            ArrayAdapter<String> myadapter = new ArrayAdapter<String>(MainActivity.this, R.layout.list_item_view, R.id.my_listitem, mntList);
+
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(MainActivity.this, mntData.get(i), Toast.LENGTH_SHORT).show();
+                }
+            });
 
                 try {
                 JSONArray jArr = new JSONArray(o);
@@ -129,7 +138,14 @@ public class MainActivity extends AppCompatActivity {
                     String urlImg = new JSONObject(jObj.getString("auxdata")).getString("img");
 
                     Mountain myMnt = new Mountain(lName, lLoc, lHeight, urlImg);
-                    mntList.add(myMnt);
+
+                    String mName = myMnt.nameGet();
+                    mntList.add(mName);
+
+                    String mData = myMnt.messageGet();
+                    mntData.add(mData);
+
+
 
 
                 }
