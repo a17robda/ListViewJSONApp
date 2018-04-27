@@ -21,6 +21,6 @@ public class Mountain {
         return name;
     }
     public String messageGet() {
-        return name + "is located at: " + location  + "\n" + "and has a height of: " + height + "m";
+        return name + " is located at: " + location  + "\n" + " and has a height of: " + height + "m";
     }
 }
