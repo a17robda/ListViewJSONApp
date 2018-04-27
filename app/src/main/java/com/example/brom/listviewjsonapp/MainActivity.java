@@ -16,8 +16,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 // Create a new class, com.example.brom.listviewjsonapp.Mountain, that can hold your JSON data
@@ -107,25 +111,41 @@ public class MainActivity extends AppCompatActivity {
             Log.d("tomten", "DataFetched:" + o);
             // This code executes after we have received our data. The String object o holds
             // the un-parsed JSON string or is null if we had an IOException during the fetch.
-            ListView myListView = (ListView) findViewById(R.id.my_listview);
+            ListView listview = (ListView)findViewById(R.id.my_listview);
+            List<Mountain> mntList = new ArrayList<Mountain>();
+            Array [] mntListArr = new Array[mntList.size()];
+            mntListArr = mntList.toArray(mntListArr);
+            ArrayAdapter<Mountain> myadapter = new ArrayAdapter<Mountain>(MainActivity.this, R.layout.list_item_view, R.id.my_listitem, mntList);
 
-
-            if (o != null){
                 try {
-                    JSONObject json1 = new JSONObject(o);
-                    JSONArray a = json1.getJSONArray("DataFetched");
+                JSONArray jArr = new JSONArray(o);
+                for (int i = 0; i < jArr.length(); i++) {
+                    JSONObject jObj = jArr.getJSONObject(i);
+
+                    String lName = jObj.getString("name");
+                    String lLoc = jObj.getString("location");
+                    int Height = jObj.getInt("size");
+                    String lHeight = Integer.toString(Height);
+                    String urlImg = new JSONObject(jObj.getString("auxdata")).getString("img");
+
+                    Mountain myMnt = new Mountain(lName, lLoc, lHeight, urlImg);
+                    mntList.add(myMnt);
 
 
-
-                }catch  (JSONException e) {
-                    Log.e("brom", "E:" +e.getMessage());
                 }
+
+            }catch(JSONException e){
+                Log.e("brom", "E:" + e.getMessage());
             }
+
+            listview.setAdapter(myadapter);
+        }
+
 
             // Implement a parsing code that loops through the entire JSON and creates objects
             // of our newly created com.example.brom.listviewjsonapp.Mountain class.
 
         }
     }
-}
+
 
